@@ -8,5 +8,5 @@ services:
         source: "/home/fan-nginx"
         target: "/home/fan-nginx"
     environment:
-      BOOT_OPTIONS: "--server.port=8080"
+      BOOT_OPTIONS: "--server.port=9678 --init.admin=admin --init.pass=你的强密码（大小写+数字）"
     network_mode: "host"
