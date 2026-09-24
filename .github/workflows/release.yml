@@ -124,6 +124,12 @@ jobs:
         with:
           ref: ${{ github.event_name == 'push' && github.ref || format('refs/tags/{0}', github.event.inputs.tag) }}
 
+      - name: Download jar artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: fan-nginx-jar
+          path: target/
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
 
