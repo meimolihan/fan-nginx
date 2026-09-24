@@ -195,7 +195,7 @@ jobs:
               -H "Authorization: Bearer ${CNB_TOKEN}" \
               -H "accept: application/vnd.cnb.api+json" \
               -H "Content-Type: application/json" \
-              -d '{"name":"'"${REPO}"'","description":"fan-nginx mirror","private":false}')
+              -d '{"name":"'"${REPO}"'","description":"fan-nginx mirror","visibility":"public"}')
             echo "CNB 创建响应: ${body}"
             echo "${body}" | grep -qi '"repo_id"\|"id"' || { echo "自动创建 CNB 仓库失败"; exit 1; }
           fi
