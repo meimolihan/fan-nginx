@@ -180,6 +180,24 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event_name == 'push' && github.ref || format('refs/tags/{0}', github.event.inputs.tag) }}
 
+      - name: Ensure CNB repository
+        if: ${{ env.CNB_TOKEN != '' }}
+        env:
+          CNB_TOKEN: ${{ secrets.CNB_ACCESS_TOKEN }}
+        run: |
+          REPO="$(basename "$(git config --get remote.origin.url)" .git)"
+          CNAME="cnb.cool/meimolihan/${REPO}"
+          if GIT_TERMINAL_PROMPT=0 git ls-remote "https://cnb:${CNB_TOKEN}@${CNAME}.git" >/dev/null 2>&1; then
+            echo "CNB 仓库已存在：${CNAME}"
+          else
+            echo "CNB 仓库不存在：${CNAME}，自动创建 ..."
+            code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://api.cnb.cool/meimolihan/-/repos" \
+              -H "Authorization: Bearer ${CNB_TOKEN}" \
+              -H "Content-Type: application/json" \
+              -d '{"name":"'"${REPO}"'","description":"fan-nginx mirror","private":false}')
+            [ "${code}" = "200" ] || [ "${code}" = "201" ] || { echo "自动创建 CNB 仓库失败: HTTP ${code}"; exit 1; }
+          fi
+
       - name: Sync to CNB Repository
         if: ${{ env.CNB_TOKEN != '' }}
         env:
