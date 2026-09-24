@@ -44,8 +44,8 @@ RUN apk add --update --no-cache \
 	&& nginx -v \
 	&& nginx -V \
     && rm -rf /var/cache/apk/* /tmp/*
-COPY target/nginxWebUI-*.jar /home/nginxWebUI.jar
+COPY target/fan-nginx-*.jar /home/fan-nginx.jar
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
-# VOLUME ["/home/nginxWebUI"]
+# VOLUME ["/home/fan-nginx"]
 ENTRYPOINT ["tini", "entrypoint.sh"]

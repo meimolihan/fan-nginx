@@ -1,4 +1,4 @@
 *
-!target/nginxWebUI-*.jar
+!target/fan-nginx-*.jar
 !Dockerfile
 !entrypoint.sh

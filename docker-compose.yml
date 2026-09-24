@@ -1,0 +1,12 @@
+services:
+  fan-nginx:
+    image: mobufan/fan-nginx:latest
+    container_name: fan-nginx
+    restart: always
+    volumes:
+      - type: bind
+        source: "/home/fan-nginx"
+        target: "/home/fan-nginx"
+    environment:
+      BOOT_OPTIONS: "--server.port=8080"
+    network_mode: "host"

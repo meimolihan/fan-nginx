@@ -1,0 +1,102 @@
+package com.fan.controller.adminPage;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.noear.solon.annotation.Controller;
+import org.noear.solon.annotation.Inject;
+import org.noear.solon.annotation.Mapping;
+import org.noear.solon.core.handle.ModelAndView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fan.config.AppFilter;
+import com.fan.model.Log;
+import com.fan.service.LogService;
+import com.fan.service.SettingService;
+import com.fan.sqlhelper.bean.Page;
+import com.fan.sqlhelper.utils.ConditionAndWrapper;
+import com.fan.utils.BLogFileTailer;
+import com.fan.utils.BaseController;
+import com.fan.utils.JsonResult;
+import com.fan.utils.SystemTool;
+
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.URLUtil;
+
+@Controller
+@Mapping("/adminPage/log")
+public class LogController extends BaseController {
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Inject
+	SettingService settingService;
+	@Inject
+	LogService logService;
+	@Inject
+	AppFilter appFilter;
+	@Inject
+	BLogFileTailer bLogFileTailer;
+
+	@Mapping("")
+	public ModelAndView index(ModelAndView modelAndView, Page page) {
+		setPage(page);
+		page = logService.search(page);
+		modelAndView.put("page", page);
+
+		modelAndView.put("isLinux", SystemTool.isLinux());
+		modelAndView.view("/adminPage/log/index.html");
+		return modelAndView;
+	}
+
+	@Mapping("addOver")
+	public JsonResult addOver(Log log) {
+		if (logService.hasDir(log.getPath(), log.getId())) {
+			return renderError(m.get("logStr.sameDir"));
+		}
+
+		if (FileUtil.isDirectory(log.getPath())) {
+			return renderError(m.get("logStr.notFile"));
+		}
+
+		sqlHelper.insertOrUpdate(log);
+		return renderSuccess();
+	}
+
+	@Mapping("detail")
+	public JsonResult detail(String id) {
+		return renderSuccess(sqlHelper.findById(id, Log.class));
+	}
+
+	@Mapping("del")
+	public JsonResult del(String id) {
+		String[] ids = id.split(",");
+		sqlHelper.deleteByIds(ids, Log.class);
+		return renderSuccess();
+	}
+
+	@Mapping("tail")
+	public ModelAndView tail(ModelAndView modelAndView, String id, String protocol) {
+		modelAndView.put("id", id);
+		modelAndView.view("/adminPage/log/tail.html");
+		return modelAndView;
+	}
+
+	@Mapping("down")
+	public File down(String id) throws IOException {
+		Log log = sqlHelper.findById(id, Log.class);
+		//todo: 简化下载处理
+		return new File(log.getPath());
+	}
+
+	@Mapping("tailCmd")
+	public JsonResult tailCmd(String id, String guid) {
+		Log log = sqlHelper.findById(id, Log.class);
+		if (!FileUtil.exist(log.getPath())) {
+			return renderSuccess("");
+		}
+
+		String rs = bLogFileTailer.run(guid, log.getPath());
+		return renderSuccess(rs);
+	}
+
+}

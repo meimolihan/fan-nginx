@@ -1,0 +1,36 @@
+package com.fan.model;
+
+import com.fan.sqlhelper.bean.BaseModel;
+import com.fan.sqlhelper.config.InitValue;
+import com.fan.sqlhelper.config.Table;
+
+@Table
+public class DenyAllow extends BaseModel {
+
+	/**
+	 * 名单名称
+	 */
+	String name;
+
+	/**
+	 * ip名单(用回车分隔)
+	 */
+	String ip;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+}

@@ -289,7 +289,7 @@ function readme() {
 }
 
 function qr(name, key) {
-	$("#qrImg").attr("src", ctx + "/adminPage/admin/qr?url=" + encodeURIComponent(`otpauth://totp/${name}?secret=${key}&issuer=nginxWebUI`));
+	$("#qrImg").attr("src", ctx + "/adminPage/admin/qr?url=" + encodeURIComponent(`otpauth://totp/${name}?secret=${key}&issuer=fan-nginx`));
 
 	layer.open({
 		type: 1,

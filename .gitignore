@@ -1,8 +1,16 @@
 HELP.md
 target/
+*.jar
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+
+### fan-nginx ###
+/home/
+log/
+*.db
+*.db-shm
+*.db-wal
 
 ### STS ###
 .apt_generated

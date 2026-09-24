@@ -1,76 +1,37 @@
-# nginxWebUI
+# fan-nginx
 
 ### [README.md English version](README_EN.md)
 
-#### 介绍
-nginx网页配置工具
+#### 项目介绍
 
-QQ技术交流群1: 1106758598(已满)
+fan-nginx 是一个开源的 Nginx 图形化管理平台. 它基于 Solon 框架和 SQLite 数据库构建, 无需单独安装数据库, 部署后开箱即用.
 
-QQ技术交流群2: 560797506
+通过简洁的网页界面, 即可完成 Nginx 的配置与运维管理, 覆盖 Nginx 日常使用约 90% 的配置场景. 未被覆盖的配置项, 可通过自定义参数模板按需生成, 保证配置文件完全可控.
 
-邮箱: cym1102@qq.com
+- Github: [https://github.com/meimolihan/fan-nginx](https://github.com/meimolihan/fan-nginx)
+- Docker Hub: [https://hub.docker.com/r/mobufan/fan-nginx](https://hub.docker.com/r/mobufan/fan-nginx)
 
-官网地址: [https://www.nginxwebui.cn](https://www.nginxwebui.cn)
+#### 功能特性
 
-专业版地址: [https://pro.nginxwebui.cn](https://pro.nginxwebui.cn)
-
-Gitee: [https://gitee.com/cym1102/nginxWebUI](https://gitee.com/cym1102/nginxWebUI)
-
-Github: [https://github.com/cym1102/nginxWebUI](https://github.com/cym1102/nginxWebUI)
-
-视频教程: [https://www.bilibili.com/video/BV18A4y1D7GZ](https://www.bilibili.com/video/BV18A4y1D7GZ)
-
-微信捐赠二维码
-
-<img src="README/weixin.png"  height="200" width="200">
-
-#### 功能说明
-
-nginxWebUI是一款图形化管理nginx配置得工具, 可以使用网页来快速配置nginx的各项功能, 包括http协议转发, tcp协议转发, 反向代理, 负载均衡, 静态html服务器, ssl证书自动申请、续签、配置等, 配置好后可一建生成nginx.conf文件, 同时可控制nginx使用此文件进行启动与重载, 完成对nginx的图形化控制闭环.
-
-nginxWebUI也可管理多个nginx服务器集群, 随时一键切换到对应服务器上进行nginx配置, 也可以一键将某台服务器配置同步到其他服务器, 方便集群管理.
-
-nginx本身功能复杂, nginxWebUI并不能涵盖nginx所有功能, 但能覆盖nginx日常90%的功能使用配置, 平台没有涵盖到的nginx配置项, 可以使用自定义参数模板, 在conf文件中生成配置独特的参数。
-
-部署此项目后, 配置nginx再也不用上网各种搜索配置代码, 再也不用手动申请和配置ssl证书, 只需要在本项目中进行增删改查就可方便的配置和启动nginx。
+- 图形化配置: 在网页中对 Nginx 各项参数进行增删改查, 一键生成 nginx.conf
+- 协议转发: 支持 HTTP 协议与 TCP/Stream 协议的转发配置
+- 反向代理: 可视化配置 server 项, 支持 SSL、HTTP/2、http 跳转 https
+- 负载均衡: 可视化配置 upstream 集群, 并在反向代理中直接引用
+- 证书管理: 基于 acme.sh 自动申请、续签 SSL 证书, 支持网页上传 pem/key
+- 静态站点: 网页上传 HTML 压缩包到指定路径, 免去命令行上传步骤
+- 多机管理: 在一台机器上管理多台 Nginx 服务器, 支持配置一键同步
+- 备份回滚: nginx.conf 历史版本备份, 出错时一键回滚
+- IP 管控: 支持 HTTP 与 Stream 的 IP 黑白名单配置
+- 密码文件: 支持 HTTP Basic Auth 密码文件管理
+- API 接口: 内置 smart-doc 接口文档, 便于二次开发与自动化运维
 
 #### 技术说明
 
-本项目是基于solon的web系统, 数据库使用sqlite, 因此服务器上不需要安装任何数据库
-
-本系统通过Let's encrypt申请证书, 使用acme.sh脚本进行自动化申请和续签, 开启续签的证书将在每天凌晨2点进行续签, 只有超过60天的证书才会进行续签. 只支持在linux下签发证书.
-
-添加tcp/ip转发配置支持时, 一些低版本的nginx可能需要重新编译，通过添加–with-stream参数指定安装stream模块才能使用, 但在ubuntu 18.04下, 官方软件库中的nginx已经带有stream模块, 不需要重新编译. 本系统如果配置了tcp转发项的话, 会自动引入ngx_stream_module.so的配置项, 如果没有开启则不引入, 最大限度优化ngnix配置文件. 
-
-
-#### 专业版与开源版区别
-
-专业版地址: [https://pro.nginxwebui.cn](https://pro.nginxwebui.cn)
-
-| 功能         | 专业版        | 开源版        |
-| ----------- | ----------- | ----------- |
-| 基本参数配置       | √  | √ |
-| http参数配置      | √  | √ |
-| 反向代理配置       | √  | √ |
-| Stream参数配置    | √  | √ |
-| 负载均衡配置       | √  | √ |
-| 参数模板          | √  | √ |
-| 静态网页上传       | √  | √ |
-| 密码文件管理       | √  | √ |
-| 黑白名单IP        | √  | √ |
-| 证书申请          | √  | √ |
-| API接口文档       | √  | √ |
-| 远程管理          | √  | √ |
-| 节点及分组统一管理   | √  | × |
-| 节点配置文件统一同步 | √  | × |
-| 节点信息数据采集    | √  | × |
-| 节点状态统计       | √  | × |
-| 缓存配置         | √  | × |
-| nginx日志采集    | √  | × |
-| nginx日志查看    | √  | × |
-| nginx日志统计    | √  | × |
-| nginx流量统计    | √  | × |
+- 后端基于 Java 8 与 Solon 框架开发, 默认数据库为 SQLite, 也支持 MySQL、PostgreSQL
+- 证书通过 Let's Encrypt + acme.sh 进行自动化申请与续签, 仅支持 Linux 环境签发
+- 开启续签的证书每天凌晨 2 点自动检查, 超过 60 天才到期的证书才会续签
+- 配置 TCP/Stream 转发时, 高版本 Nginx 的 stream 模块开箱即用; 老版本编译安装 Nginx 时需添加 `--with-stream` 参数
+- 未启用 TCP 转发时不会引入 stream 模块配置, 最大限度精简 nginx.conf 
 
 
 #### jar安装说明
@@ -110,10 +71,10 @@ Path : JDK安装目录\bin
 2.下载最新版发行包jar
 
 ```
-Linux: mkdir /home/nginxWebUI/ 
-       wget -O /home/nginxWebUI/nginxWebUI.jar https://gitee.com/cym1102/nginxWebUI/releases/download/4.4.2/nginxWebUI-4.4.2.jar
+Linux: mkdir /home/fan-nginx/ 
+       wget -O /home/fan-nginx/fan-nginx.jar https://github.com/meimolihan/fan-nginx/releases/download/v4.4.2/fan-nginx-4.4.2.jar
 
-Windows: 直接使用浏览器下载 https://gitee.com/cym1102/nginxWebUI/releases/download/4.4.2/nginxWebUI-4.4.2.jar 到 D:/home/nginxWebUI/nginxWebUI.jar
+Windows: 直接使用浏览器下载 https://github.com/meimolihan/fan-nginx/releases/download/v4.4.2/fan-nginx-4.4.2.jar 到 D:/home/fan-nginx/fan-nginx.jar
 ```
 
 有新版本只需要修改路径中的版本即可
@@ -121,20 +82,20 @@ Windows: 直接使用浏览器下载 https://gitee.com/cym1102/nginxWebUI/releas
 3.启动程序
 
 ```
-Linux: nohup java -jar -Dfile.encoding=UTF-8 /home/nginxWebUI/nginxWebUI.jar --server.port=8080 --project.home=/home/nginxWebUI/ > /dev/null &
+Linux: nohup java -jar -Dfile.encoding=UTF-8 /home/fan-nginx/fan-nginx.jar --server.port=8080 --project.home=/home/fan-nginx/ > /dev/null &
 
-Windows: java -jar -Dfile.encoding=UTF-8 D:/home/nginxWebUI/nginxWebUI.jar --server.port=8080 --project.home=D:/home/nginxWebUI/
+Windows: java -jar -Dfile.encoding=UTF-8 D:/home/fan-nginx/fan-nginx.jar --server.port=8080 --project.home=D:/home/fan-nginx/
 ```
 
 参数说明(都是非必填)
 
 --server.port 占用端口, 默认以8080端口启动
 
---project.home 项目配置文件目录，存放数据库文件，证书文件，日志等, 默认为/home/nginxWebUI/
+--project.home 项目配置文件目录，存放数据库文件，证书文件，日志等, 默认为/home/fan-nginx/
 
 --spring.database.type=mysql 使用其他数据库，不填为使用本地sqlite数据库，可选mysql, postgresql
 
---spring.datasource.url=jdbc:mysql://ip:port/nginxwebui 数据库url 
+--spring.datasource.url=jdbc:mysql://ip:port/fan-nginx 数据库url 
 
 --spring.datasource.username=root  数据库用户
 
@@ -150,7 +111,7 @@ Windows: java -jar -Dfile.encoding=UTF-8 D:/home/nginxWebUI/nginxWebUI.jar --ser
 
 #### docker安装说明
 
-本项目制作了docker镜像, 支持 x86_64/arm64/arm v7 平台，同时包含nginx和nginxWebUI在内, 一体化管理与运行nginx. 
+本项目制作了docker镜像, 支持 x86_64/arm64/arm v7 平台，同时包含nginx和fan-nginx在内, 一体化管理与运行nginx. 
 
 1.安装docker容器环境
 
@@ -169,71 +130,48 @@ yum install docker
 2.拉取镜像: 
 
 ```
-docker pull cym1102/nginxwebui:latest
-
-或者
-
-docker pull registry.cn-hangzhou.aliyuncs.com/cym19871102/nginxwebui:latest
+docker pull mobufan/fan-nginx:latest
 ```
 
 3.启动容器: 
 
 ```
 docker run -itd \
-  -v /home/nginxWebUI:/home/nginxWebUI \
+  -v /home/fan-nginx:/home/fan-nginx \
   -e BOOT_OPTIONS="--server.port=8080" \
   --net=host \
   --restart=always \
-  cym1102/nginxwebui:latest
-  
-或者
-
-docker run -itd \
-  -v /home/nginxWebUI:/home/nginxWebUI \
-  -e BOOT_OPTIONS="--server.port=8080" \
-  --net=host \
-  --restart=always \
-  registry.cn-hangzhou.aliyuncs.com/cym19871102/nginxwebui:latest
+  mobufan/fan-nginx:latest
 ```
 
 注意: 
 
 1. 启动容器时请使用--net=host参数, 直接映射本机端口, 因为内部nginx可能使用任意一个端口, 所以必须映射本机所有端口. 
 
-2. 容器需要映射路径/home/nginxWebUI:/home/nginxWebUI, 此路径下存放项目所有数据文件, 包括数据库, nginx配置文件, 日志, 证书等, 升级镜像时, 此目录可保证项目数据不丢失. 请注意备份.
+2. 容器需要映射路径/home/fan-nginx:/home/fan-nginx, 此路径下存放项目所有数据文件, 包括数据库, nginx配置文件, 日志, 证书等, 升级镜像时, 此目录可保证项目数据不丢失. 请注意备份.
 
 3. -e BOOT_OPTIONS 参数可填充java启动参数, 可以靠此项参数修改端口号
 
 --server.port 占用端口, 不填默认以8080端口启动
 
-4. 日志默认存放在/home/nginxWebUI/log/nginxWebUI.log
+4. 日志默认存放在/home/fan-nginx/log/fan-nginx.log
 
-另: 使用docker-compose时配置文件如下
+另: 使用docker-compose时配置文件如下, 项目仓库根目录已内置同款 `docker-compose.yml`, 可直接:
+
+```
+docker compose pull
+docker compose up -d
+```
 
 ```
 version: "3.2"
 services:
-  nginxWebUi-server:
-    image: cym1102/nginxwebui:latest
+  fan-nginx-server:
+    image: mobufan/fan-nginx:latest
     volumes:
       - type: bind
-        source: "/home/nginxWebUI"
-        target: "/home/nginxWebUI"
-    environment:
-      BOOT_OPTIONS: "--server.port=8080"
-    network_mode: "host"
-    restart: always
-
-或者
-
-version: "3.2"
-services:
-  nginxWebUi-server:
-    image: registry.cn-hangzhou.aliyuncs.com/cym19871102/nginxwebui:latest
-    volumes:
-      - type: bind
-        source: "/home/nginxWebUI"
-        target: "/home/nginxWebUI"
+        source: "/home/fan-nginx"
+        target: "/home/fan-nginx"
     environment:
       BOOT_OPTIONS: "--server.port=8080"
     network_mode: "host"
@@ -252,42 +190,93 @@ mvn clean package
 使用docker构建镜像
 
 ```
-docker build -t nginxwebui:latest .
+docker build -t mobufan/fan-nginx:latest .
 ```
 
-#### 添加开机启动
+#### 脚本安装（systemd 一键安装/升级）
 
-
-1. 编辑service配置
-
-```
-vim /etc/systemd/system/nginxwebui.service
-```
+Linux 服务器推荐使用一键安装脚本，自动完成 jar 部署、nginx 检测/安装、systemd 服务注册、开机自启与防火墙放行。可重复执行，升级等同于重新安装（数据目录自动保留）。
 
 ```
-[Unit]
-Description=NginxWebUI
-After=syslog.target
-After=network.target
- 
-[Service]
-Type=simple
-User=root
-Group=root
-WorkingDirectory=/home/nginxWebUI
-ExecStart=/usr/bin/java -jar -Dfile.encoding=UTF-8 /home/nginxWebUI/nginxWebUI.jar
-Restart=always
- 
-[Install]
-WantedBy=multi-user.target
+# 交互式安装（提示端口、数据目录）
+bash scripts/install.sh
+
+# 参数静默安装：端口 + 数据目录，并初始化管理员账号
+bash scripts/install.sh -p 8080 -d /var/lib/fan-nginx -u admin -P 123456
+
+# 使用本地已编译好的 jar 安装（无需源码/maven）
+bash scripts/install.sh -p 8080 -d /var/lib/fan-nginx -j /tmp/fan-nginx-4.4.2.jar
+
+# 在线下载 GitHub Releases 预编译 jar 安装（默认方式）
+bash scripts/install.sh -p 8080 -b
+
+# 国内网络可指定镜像仓库
+FAN_NGINX_REPO=https://ghfast.top/https://github.com/meimolihan/fan-nginx.git bash scripts/install.sh -y
 ```
 
-2. 之后执行
+远程安装（不需要克隆源码到目标服务器，推荐）:
 
 ```
-systemctl daemon-reload
-systemctl enable nginxwebui.service
-systemctl start nginxwebui.service
+# 通过在目标服务器上远程执行 install.sh，自动下载 GitHub Releases 预编译 jar 并安装为 systemd 服务
+bash -c "$(curl -sSL https://raw.githubusercontent.com/meimolihan/fan-nginx/main/scripts/install.sh)" -p 8080 -d /var/lib/fan-nginx -u admin -P 你的复杂密码
+
+# 交互式远程安装（会询问端口、数据目录）
+bash -c "$(curl -sSL https://raw.githubusercontent.com/meimolihan/fan-nginx/main/scripts/install.sh)"
+
+# 国内网络远程安装（走 GitHub 镜像加速）
+FAN_NGINX_REPO=https://ghfast.top/https://github.com/meimolihan/fan-nginx.git bash -c "$(curl -sSL https://raw.githubusercontent.com/meimolihan/fan-nginx/main/scripts/install.sh)" -y
+```
+
+远程安装同样会完成 jar 部署、nginx 检测/安装、systemd 服务注册、开机自启、防火墙放行与 CLI 安装，装完后即可在目标机上执行 `fan-nginx status` 确认状态。
+
+安装完成后：
+
+- 数据目录：`/var/lib/fan-nginx`（sqlite.db、nginx 配置、证书、日志等）
+- 安装记录：`/etc/fan-nginx.conf`
+- systemd 服务：`fan-nginx.service`
+- 内置 CLI：`/usr/local/bin/fan-nginx`
+
+卸载：
+
+```
+bash scripts/uninstall.sh -y --purge      # 免确认卸载并删除数据目录
+bash scripts/uninstall.sh                 # 交互式卸载（默认保留数据目录）
+```
+
+#### systemctl 服务管理
+
+```
+systemctl start fan-nginx          # 启动
+systemctl stop fan-nginx           # 停止
+systemctl restart fan-nginx        # 重启
+systemctl status fan-nginx         # 状态
+systemctl enable fan-nginx         # 开机自启
+journalctl -u fan-nginx -f         # 跟踪日志
+```
+
+#### 内置 CLI 命令
+
+安装脚本会同时安装一个 `fan-nginx` 命令行工具（等价于 fan-webssh 系列面板的命令风格），无需记住繁琐的 java 命令：
+
+```
+fan-nginx status                  # 显示运行方式/systemd状态/PID/端口/访问地址/运行时长/内存/路径
+fan-nginx credentials             # 重置并打印全部管理员账号密码（关闭两步验证）
+fan-nginx start | stop | restart  # 启停/重启 systemd 服务
+fan-nginx uninstall [-y] [--purge|--keep-data]  # 卸载
+fan-nginx version                 # 显示版本号
+fan-nginx help                    # 显示帮助
+```
+
+#### 备份与还原
+
+提供了与面板「备份文件管理」一致的命令行备份/还原脚本（安装时自动部署到 `/var/lib/fan-nginx/scripts`）：
+
+```
+# 备份数据目录（默认保留最近 6 份，备份文件 FanNginx-时间戳.tar.gz）
+bash /var/lib/fan-nginx/scripts/fan-nginx_backup.sh
+
+# 还原到最近一份备份（会停止服务）
+bash /var/lib/fan-nginx/scripts/fan-nginx_recover.sh
 ```
 
 #### 使用说明
@@ -336,7 +325,7 @@ systemctl start nginxwebui.service
  
 ![输入图片说明](README/remote.jpeg "remote.jpg")
 
-远程服务器管理, 如果有多台nginx服务器, 可以都部署上nginxWebUI, 然后登录其中一台, 在远程管理中添加其他服务器的ip和用户名密码, 就可以在一台机器上管理所有的nginx服务器了.
+远程服务器管理, 如果有多台nginx服务器, 可以都部署上fan-nginx, 然后登录其中一台, 在远程管理中添加其他服务器的ip和用户名密码, 就可以在一台机器上管理所有的nginx服务器了.
 
 提供一键同步功能, 可以将某一台服务器的数据配置和证书文件同步到其他服务器中
 
@@ -352,10 +341,18 @@ systemctl start nginxwebui.service
 
 如果忘记了登录密码或没有保存两步验证二维码，可按如下教程重置密码和关闭两步验证.
 
-1.jar安装方式, 执行命令
+1.脚本安装方式, 直接使用内置 CLI（推荐）
 
 ```
-java -jar /home/nginxWebUI/nginxWebUI.jar --project.home=/home/nginxWebUI/ --project.findPass=true
+fan-nginx credentials
+```
+
+等价于执行下面命令，运行成功后即可重置并打印出全部用户名密码并关闭两步验证.
+
+2.jar安装方式, 执行命令
+
+```
+java -jar /home/fan-nginx/fan-nginx.jar --project.home=/home/fan-nginx/ --project.findPass=true
 ```
 
 --project.home 为项目文件所在目录, 使用docker容器时为映射目录
@@ -364,7 +361,7 @@ java -jar /home/nginxWebUI/nginxWebUI.jar --project.home=/home/nginxWebUI/ --pro
 
 运行成功后即可重置并打印出全部用户名密码并关闭两步验证
 
-2.docker安装方式, 首先执行进入docker容器的命令, 其中{ID}为容器的id
+3.docker安装方式, 首先执行进入docker容器的命令, 其中{ID}为容器的id
 
 ```
 docker exec -it {ID} /bin/sh
@@ -373,7 +370,7 @@ docker exec -it {ID} /bin/sh
 再执行命令
 
 ```
-java -jar /home/nginxWebUI.jar --project.findPass=true
+java -jar /home/fan-nginx.jar --project.findPass=true
 ```
 
 运行成功后即可重置并打印出全部用户名密码并关闭两步验证

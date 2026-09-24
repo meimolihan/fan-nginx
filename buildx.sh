@@ -10,8 +10,8 @@ set -o pipefail
 
 ## 基本信息
 arch="linux/amd64,linux/arm64"
-ver=$(cat pom.xml | grep -A1 nginxWebUI | grep version | grep -oP "\d+\.\d+\.\d+")
-echo "构建镜像：nginxwebui"
+ver=$(cat pom.xml | grep -A1 fan-nginx | grep version | grep -oP "\d+\.\d+\.\d+")
+echo "构建镜像：fan-nginx"
 echo "构建架构：$arch"
 echo "构建版本：$ver"
 
@@ -33,10 +33,8 @@ docker buildx build \
     --cache-from "type=local,src=/tmp/.buildx-cache" \
     --cache-to "type=local,dest=/tmp/.buildx-cache" \
     --platform "$arch" \
-    --tag cym1102/nginxwebui:${ver} \
-    --tag cym1102/nginxwebui:latest \
-    --tag registry.cn-hangzhou.aliyuncs.com/cym19871102/nginxwebui:${ver} \
-    --tag registry.cn-hangzhou.aliyuncs.com/cym19871102/nginxwebui:latest \
+    --tag mobufan/fan-nginx:${ver} \
+    --tag mobufan/fan-nginx:latest \
     --push \
     .
 

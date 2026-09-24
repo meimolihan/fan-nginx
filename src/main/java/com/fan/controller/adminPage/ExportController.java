@@ -1,0 +1,86 @@
+package com.fan.controller.adminPage;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Date;
+
+import org.noear.solon.annotation.Controller;
+import org.noear.solon.annotation.Inject;
+import org.noear.solon.annotation.Mapping;
+import org.noear.solon.annotation.Produces;
+import org.noear.solon.core.handle.Context;
+import org.noear.solon.core.handle.DownloadedFile;
+import org.noear.solon.core.handle.ModelAndView;
+import org.noear.solon.core.handle.UploadedFile;
+import org.noear.solon.core.util.MimeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fan.ext.AsycPack;
+import com.fan.service.CertService;
+import com.fan.service.ConfService;
+import com.fan.utils.BaseController;
+
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.json.JSONUtil;
+
+@Controller
+@Mapping("/adminPage/export")
+public class ExportController extends BaseController {
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Inject
+	ConfService confService;
+	@Inject
+	CertService certService;
+
+	@Mapping("")
+	public ModelAndView index(ModelAndView modelAndView) {
+
+		modelAndView.view("/adminPage/export/index.html");
+		return modelAndView;
+	}
+
+	@Mapping("dataExport")
+	public DownloadedFile dataExport(Context context) {
+		AsycPack asycPack = confService.getAsycPack(new String[] { "all" });
+		
+		String json = JSONUtil.toJsonPrettyStr(asycPack);
+
+		String date = DateUtil.format(new Date(), "yyyy-MM-dd_HH-mm-ss");
+		DownloadedFile downloadedFile = new DownloadedFile("application/octet-stream", new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8)), date + ".json");
+		return downloadedFile;
+	}
+	
+	@Produces(MimeType.TEXT_HTML_VALUE)
+	@Mapping(value = "dataImport")
+	public String dataImport(UploadedFile file, Context context) throws IOException {
+		if (file != null) {
+			File tempFile = new File(homeConfig.home + "temp" + File.separator + file.getName().replace("..", ""));
+			FileUtil.mkdir(tempFile.getParentFile());
+			file.transferTo(tempFile);
+			String json = FileUtil.readString(tempFile, StandardCharsets.UTF_8);
+			tempFile.delete();
+
+			AsycPack asycPack = JSONUtil.toBean(json, AsycPack.class);
+			confService.setAsycPack(asycPack);
+			
+		}
+		return "<script>window.parent.finisheUpload();</script> ";
+	}
+
+	@Mapping("logExport")
+	public DownloadedFile logExport(Context context) throws IOException {
+		File file = new File(homeConfig.home + "log/fan-nginx.log");
+		if (file.exists()) {
+			DownloadedFile downloadedFile = new DownloadedFile("application/octet-stream", Files.newInputStream(file.toPath()), file.getName());
+			return downloadedFile;
+		}
+
+		return null;
+	}
+
+}

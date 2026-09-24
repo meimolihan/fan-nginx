@@ -1,75 +1,35 @@
-# nginxWebUI
+# fan-nginx
 
 #### Introduce
-Nginx web page configuration tool
 
-QQ Group1: 1106758598
+fan-nginx is an open-source web-based management platform for Nginx. It is built with the Solon framework and an embedded SQLite database, so no standalone database is required — deploy and use it right away.
 
-QQ Group2: 560797506
+Through a clean web interface, you can handle Nginx configuration and administration tasks, covering about 90% of everyday Nginx configuration scenarios. For settings not covered by the platform, custom parameter templates let you generate exactly the configuration you need, keeping your nginx.conf fully under your control.
 
-Email: cym1102@qq.com
+- Github: [https://github.com/meimolihan/fan-nginx](https://github.com/meimolihan/fan-nginx)
+- Docker Hub: [https://hub.docker.com/r/mobufan/fan-nginx](https://hub.docker.com/r/mobufan/fan-nginx)
 
-Official website: [http://www.nginxwebui.cn](http://www.nginxwebui.cn)
+#### Features
 
-Professional edition address: [https://pro.nginxwebui.cn](https://pro.nginxwebui.cn)
-
-Gitee: [https://gitee.com/cym1102/nginxWebUI](https://gitee.com/cym1102/nginxWebUI)
-
-Github: [https://github.com/cym1102/nginxWebUI](https://github.com/cym1102/nginxWebUI)
-
-Video tutorial: [https://www.bilibili.com/video/BV18A4y1D7GZ](https://www.bilibili.com/video/BV18A4y1D7GZ)
-
-WeChat Donate: 
-
-<img src="README/weixin.png"  height="200" width="200">
-
-#### Function description
-
-NginxWebuUI is a graphical management tool for nginx configuration. You can use web pages to quickly configure various functions of nginx, including HTTP forwarding, TCP forwarding, reverse proxy, load balancing, static HTML server, SSL certificate automatic application, renewal, configuration, etc.  Nginx. conf file can be generated after configuration, and nginx can be controlled to use this file for startup and reload, complete the graphical control of nginx closed loop.  
- 
-The nginx webui allows you to manage multiple Nginx server clusters. You can switch to the corresponding server for nginx configuration at any time. You can also synchronize the configuration of a server to other servers with one click, facilitating cluster management.  
- 
-The nginx web user interface (webui) does not cover all nginx functions, but covers 90% of the daily nginx configuration. If nginx configuration items are not covered by the platform, you can use custom parameter templates to generate unique configuration parameters in the CONF file.  
- 
-After the deployment of this project, the configuration of nginx no longer need to search the web configuration code, no longer need to manually apply for and configure SSL certificates, just need to add, delete, change and check in this project can easily configure and start nginx.  
-
-
-#### Professional edition and open source edition difference
-
-Professional edition address: [https://pro.nginxwebui.cn](https://pro.nginxwebui.cn)
-
-| function         | Professional edition        | Open source edition        |
-| ----------- | ----------- | ----------- |
-| Basic parameter configuration       | √  | √ |
-| http Parameter configuration      | √  | √ |
-| Reverse proxy configuration       | √  | √ |
-| Stream parameter configuration    | √  | √ |
-| Load balancing configuration       | √  | √ |
-| Parameterized template          | √  | √ |
-| Static web upload       | √  | √ |
-| Password file management       | √  | √ |
-| Whitelist IP        | √  | √ |
-| Certificate application          | √  | √ |
-| API interface documentation       | √  | √ |
-| Remote management          | √  | √ |
-| Manage nodes and groups   | √  | × |
-| Node configuration files synchronize | √  | × |
-| Node data collection    | √  | × |
-| Node status statistics       | √  | × |
-| Cache configuration         | √  | × |
-| nginx log collection    | √  | × |
-| nginx log view    | √  | × |
-| nginx log statistics    | √  | × |
-| nginx traffic statistics    | √  | × |
-
+- Visual configuration: add, edit, delete parameters from the web page and generate nginx.conf with one click
+- Protocol forwarding: HTTP and TCP/Stream forwarding rules
+- Reverse proxy: configure server blocks visually, with SSL, HTTP/2 and HTTP-to-HTTPS redirect support
+- Load balancing: configure upstream clusters visually and reference them from reverse proxy rules
+- Certificate management: auto-issue and auto-renew SSL certificates with acme.sh, or upload pem/key files via the web page
+- Static sites: upload HTML archives to a target path from the browser, no shell needed
+- Multi-server management: manage multiple Nginx servers from a single machine, with one-click config synchronization
+- Backup & rollback: keep backup history of nginx.conf and roll back with one click
+- IP access control: blacklist/whitelist for both HTTP and Stream
+- Password files: manage HTTP Basic Auth password files
+- API: built-in smart-doc API documentation for integration and automation
 
 #### Technical note
 
-This project is a Web system based on solon. The database use h2, so there is no need to install any database on the server.
-
-This system applies for the certificate through Let's ENCRYPT and USES acme.sh script to automatically apply for and renew the certificate. Once the certificate is renewed, it will be renewed at 2 am every day, and only certificates exceeding 60 days will be renewed.
-
-When adding TCP/IP forwarding configuration support, some lower versions of Nginx may need to be recompiled,You can install the stream module by adding the -with-stream parameter, but under Ubuntu 18.04, the nginx in the official software library already has the stream module, which does not need to be recompiled. If the TCP forwarding item is configured in this system, the configuration item of ngx_stream_module.so will be introduced automatically, and the configuration file of Ngnix will be optimized to the maximum.
+- Backend uses Java 8 and the Solon framework; default database is SQLite, with MySQL and PostgreSQL also supported
+- Certificates are issued and renewed automatically via Let's Encrypt + acme.sh, supported on Linux only
+- Expiring certificates are checked every day at 2 AM; only certificates that expire within 60 days are renewed
+- The Nginx stream module works out of the box on modern Nginx builds; older self-compiled Nginx needs to be built with the `--with-stream` flag
+- The stream module config is only introduced when TCP forwarding is enabled, keeping nginx.conf as lean as possible
 
 #### jar installation instructions 
 Take the Ubuntu operating system, for example.
@@ -106,10 +66,10 @@ reboot
 2.Download the latest release of the distribution jar
 
 ```
-Linux: mkdir /home/nginxWebUI/   
-       wget -O /home/nginxWebUI/nginxWebUI.jar https://gitee.com/cym1102/nginxWebUI/releases/download/4.4.2/nginxWebUI-4.4.2.jar
+Linux: mkdir /home/fan-nginx/   
+       wget -O /home/fan-nginx/fan-nginx.jar https://github.com/meimolihan/fan-nginx/releases/download/v4.4.2/fan-nginx-4.4.2.jar
 
-Windows: Download directly from your browser https://gitee.com/cym1102/nginxWebUI/releases/download/4.4.2/nginxWebUI-4.4.2.jar into D:/home/nginxWebUI/
+Windows: Download directly from your browser https://github.com/meimolihan/fan-nginx/releases/download/v4.4.2/fan-nginx-4.4.2.jar into D:/home/fan-nginx/
 ```
 
 With a new version, you just need to change the version in the path
@@ -117,20 +77,20 @@ With a new version, you just need to change the version in the path
 3.Start program
 
 ```
-Linux: nohup java -jar -Dfile.encoding=UTF-8 /home/nginxWebUI/nginxWebUI.jar --server.port=8080 --project.home=/home/nginxWebUI/ > /dev/null &
+Linux: nohup java -jar -Dfile.encoding=UTF-8 /home/fan-nginx/fan-nginx.jar --server.port=8080 --project.home=/home/fan-nginx/ > /dev/null &
 
-Windows: java -jar -Dfile.encoding=UTF-8 D:/home/nginxWebUI/nginxWebUI.jar --server.port=8080 --project.home=D:/home/nginxWebUI/
+Windows: java -jar -Dfile.encoding=UTF-8 D:/home/fan-nginx/fan-nginx.jar --server.port=8080 --project.home=D:/home/fan-nginx/
 ```
 
 Parameter description (both non-required)
 
 --server.port Occupied port, default starts at port 8080
 
---project.home Project profile directory for database files, certificate files, logs, etc. Default is /home/nginxwebui/
+--project.home Project profile directory for database files, certificate files, logs, etc. Default is /home/fan-nginx/
 
 --spring.database.type=mysql Use other databases, not filled with native sqlite, options include mysql postgresql
 
---spring.datasource.url=jdbc:mysql://ip:port/nginxwebui Databases url
+--spring.datasource.url=jdbc:mysql://ip:port/fan-nginx Databases url
 
 --spring.datasource.username=root  Databases user
 
@@ -146,7 +106,7 @@ Note that the Linux command ends with an & to indicate that the project is runni
 
 #### docker installation instructions 
 
-Docker image supports x86_64/arm64/arm v7 platforms. Note that an & sign is added at the end of the command, indicating that the docker image of this project has been produced by the background operation of the project, including nginx and nginxWebUI, for integrated management and operation of Nginx.
+Docker image supports x86_64/arm64/arm v7 platforms. Note that an & sign is added at the end of the command, indicating that the docker image of this project has been produced by the background operation of the project, including nginx and fan-nginx, for integrated management and operation of Nginx.
 
 1.Install the Docker environment
 
@@ -165,77 +125,135 @@ yum install docker
 2.Download images:
 
 ```
-docker pull cym1102/nginxwebui:latest
-
-or
-
-docker pull registry.cn-hangzhou.aliyuncs.com/cym19871102/nginxwebui:latest
+docker pull mobufan/fan-nginx:latest
 ```
 
 3.start container
 
 ```
 docker run -itd \
-  -v /home/nginxWebUI:/home/nginxWebUI \
+  -v /home/fan-nginx:/home/fan-nginx \
   -e BOOT_OPTIONS="--server.port=8080" \
   --net=host \
   --restart=always \
-  cym1102/nginxwebui:latest
-  
-or
-
-docker run -itd \
-  -v /home/nginxWebUI:/home/nginxWebUI \
-  -e BOOT_OPTIONS="--server.port=8080" \
-  --net=host \
-  --restart=always \
-  registry.cn-hangzhou.aliyuncs.com/cym19871102/nginxwebui:latest
+  mobufan/fan-nginx:latest
 ```
 
 notice: 
 
 1. When you start the container, use the --net=host parameter to map the native port directly, because internal Nginx may use any port, so you must map all the native ports. 
 
-2. Container need to map path/home/nginxWebUI:/home/nginxWebUI, this path for a project all data files, including database, nginx configuration files, log, certificate, etc., and updates the mirror, this directory to ensure that project data is not lost. Please note that backup.
+2. Container need to map path/home/fan-nginx:/home/fan-nginx, this path for a project all data files, including database, nginx configuration files, log, certificate, etc., and updates the mirror, this directory to ensure that project data is not lost. Please note that backup.
 
 3. -e BOOT_OPTIONS Parameter to populate the Java startup parameter, which can be used to modify the port number
 
 --server.port Occupied port, do not fill the default port 8080 startup
 
-4. Logs are stored by default /home/nginxWebUI/log/nginxWebUI.log
+4. Logs are stored by default /home/fan-nginx/log/fan-nginx.log
 
 moreover: The following configuration file is used when using docker-compose
 
 ```
 version: "3.2"
 services:
-  nginxWebUi-server:
-    image: cym1102/nginxwebui:latest
+  fan-nginx-server:
+    image: mobufan/fan-nginx:latest
     volumes:
       - type: bind
-        source: "/home/nginxWebUI"
-        target: "/home/nginxWebUI"
-    environment:
-      BOOT_OPTIONS: "--server.port=8080"
-    network_mode: "host"
-    restart: always
-    
-or
-
-version: "3.2"
-services:
-  nginxWebUi-server:
-    image: registry.cn-hangzhou.aliyuncs.com/cym19871102/nginxwebui:latest
-    volumes:
-      - type: bind
-        source: "/home/nginxWebUI"
-        target: "/home/nginxWebUI"
+        source: "/home/fan-nginx"
+        target: "/home/fan-nginx"
     environment:
       BOOT_OPTIONS: "--server.port=8080"
     network_mode: "host"
     restart: always
 ```
 
+
+#### Script installation (systemd one-click install / upgrade)
+
+For Linux servers we recommend the one-click install script, which automatically deploys the jar, checks/installs nginx, registers the systemd service, enables boot autostart and opens the firewall. It is idempotent: re-running is an upgrade (the data directory is always kept).
+
+```
+# Interactive install (asks for port and data dir)
+bash scripts/install.sh
+
+# Silent install with args: port + data dir, and initialize an admin account
+bash scripts/install.sh -p 8080 -d /var/lib/fan-nginx -u admin -P 123456
+
+# Install from a locally built jar (no source code / maven needed)
+bash scripts/install.sh -p 8080 -d /var/lib/fan-nginx -j /tmp/fan-nginx-4.4.2.jar
+
+# Online: download the prebuilt jar from GitHub Releases (default)
+bash scripts/install.sh -p 8080 -b
+
+# Pick a GitHub mirror for restricted networks
+FAN_NGINX_REPO=https://ghfast.top/https://github.com/meimolihan/fan-nginx.git bash scripts/install.sh -y
+```
+
+Remote install (there is no need to clone the source to the target server; recommended):
+
+```
+# Run install.sh remotely on the target server; it auto-downloads the prebuilt jar from GitHub Releases and installs it as a systemd service
+bash -c "$(curl -sSL https://raw.githubusercontent.com/meimolihan/fan-nginx/main/scripts/install.sh)" -p 8080 -d /var/lib/fan-nginx -u admin -P YOUR_STRONG_PASSWORD
+
+# Interactive remote install (asks for port and data dir)
+bash -c "$(curl -sSL https://raw.githubusercontent.com/meimolihan/fan-nginx/main/scripts/install.sh)"
+
+# Remote install through a GitHub mirror for restricted networks
+FAN_NGINX_REPO=https://ghfast.top/https://github.com/meimolihan/fan-nginx.git bash -c "$(curl -sSL https://raw.githubusercontent.com/meimolihan/fan-nginx/main/scripts/install.sh)" -y
+```
+
+Remote install performs the same steps: jar deployment, nginx check/install, systemd service registration, boot autostart, firewall opening and CLI installation. Once finished, run `fan-nginx status` on the target machine to verify.
+
+After installation:
+
+- Data directory: `/var/lib/fan-nginx` (sqlite.db, nginx configs, certificates, logs, ...)
+- Install record: `/etc/fan-nginx.conf`
+- systemd unit: `fan-nginx.service`
+- Built-in CLI: `/usr/local/bin/fan-nginx`
+
+Uninstall:
+
+```
+bash scripts/uninstall.sh -y --purge      # uninstall without prompting and purge data dir
+bash scripts/uninstall.sh                 # interactive uninstall (keeps data by default)
+```
+
+#### systemctl service management
+
+```
+systemctl start fan-nginx          # start
+systemctl stop fan-nginx           # stop
+systemctl restart fan-nginx        # restart
+systemctl status fan-nginx         # status
+systemctl enable fan-nginx         # enable autostart on boot
+journalctl -u fan-nginx -f         # follow logs
+```
+
+#### Built-in CLI commands
+
+The install script also installs a `fan-nginx` command line tool (same command style as the fan-webssh family of panels), so you no longer need to remember the verbose java commands:
+
+```
+fan-nginx status                  # runtime/systemd/PID/port/URL/uptime/memory/paths
+fan-nginx credentials             # reset and print all admin accounts and passwords (disables 2FA)
+fan-nginx start | stop | restart  # start/stop/restart the systemd service
+fan-nginx uninstall [-y] [--purge|--keep-data]  # uninstall
+fan-nginx version                 # show version
+fan-nginx help                    # show help
+```
+
+#### Backup and restore
+
+Command-line backup/restore scripts matching the panel's "Backup file management" are provided (deployed to `/var/lib/fan-nginx/scripts` on install):
+
+```
+# Backup the data directory (keeps the last 6 archives by default, FanNginx-TIMESTAMP.tar.gz)
+bash /var/lib/fan-nginx/scripts/fan-nginx_backup.sh
+
+# Restore the latest backup (stops the service)
+bash /var/lib/fan-nginx/scripts/fan-nginx_recover.sh
+```
 
 #### Compile 
 
@@ -248,43 +266,9 @@ mvn clean package
 Compile the image with Docker
 
 ```
-docker build -t nginxwebui:latest .
+docker build -t mobufan/fan-nginx:latest .
 ```
 
-
-#### Add boot up run
-
-1. Edit service file
-
-```
-vim /etc/systemd/system/nginxwebui.service
-```
-
-```
-[Unit]
-Description=NginxWebUI
-After=syslog.target
-After=network.target
- 
-[Service]
-Type=simple
-User=root
-Group=root
-WorkingDirectory=/home/nginxWebUI
-ExecStart=/usr/bin/java -jar -Dfile.encoding=UTF-8 /home/nginxWebUI/nginxWebUI.jar
-Restart=always
- 
-[Install]
-WantedBy=multi-user.target
-```
-
-2. Then execute
-
-```
-systemctl daemon-reload
-systemctl enable nginxwebui.service
-systemctl start nginxwebui.service
-```
 
 #### instructions
 
@@ -332,7 +316,7 @@ Finally, the conF file can be generated, which can be further modified manually.
  
 ![输入图片说明](README/remote.jpeg "remote.jpg")
 
-Remote server management. If you have multiple Nginx servers, you can deploy nginxWebUI, log in to one of them, add the IP and username and password of other servers to the remote management, and then you can manage all Nginx servers on one machine.
+Remote server management. If you have multiple Nginx servers, you can deploy fan-nginx, log in to one of them, add the IP and username and password of other servers to the remote management, and then you can manage all Nginx servers on one machine.
 
 Provides one-click synchronization to synchronize data configuration and certificate files from one server to another
 
@@ -348,11 +332,19 @@ The interface invocation requires adding a token to the HTTP request header. To 
 
 If you forget your login password or don't save the two-step verification QR code, you can reset your password and turn off two-step verification by following the tutorial below.
 
-1.jar installation, execute the command
+1.Script installation — use the built-in CLI (recommended)
+
+```
+fan-nginx credentials
+```
+
+It is equivalent to the command below. After it runs successfully, all usernames and passwords are reset and printed, and two-step verification is disabled.
+
+2.jar installation, execute the command
 
 
 ```
-java -jar /home/nginxWebUI/nginxWebUI.jar --project.home=/home/nginxWebUI/ --project.findPass=true
+java -jar /home/fan-nginx/fan-nginx.jar --project.home=/home/fan-nginx/ --project.findPass=true
 ```
 
 --project.home Project profile directory or docker mapping directory
@@ -361,7 +353,7 @@ java -jar /home/nginxWebUI/nginxWebUI.jar --project.home=/home/nginxWebUI/ --pro
 
 After the operation is successful, all user names and passwords can be reset printed and two steps verify will disabled.
 
-2.docker installation, first execute the command to enter the docker container, where {ID} is the id of the container
+3.docker installation, first execute the command to enter the docker container, where {ID} is the id of the container
 
 ```
 docker exec -it {ID} /bin/sh
@@ -370,7 +362,7 @@ docker exec -it {ID} /bin/sh
 Then execute the command
 
 ```
-java -jar /home/nginxWebUI.jar --project.findPass=true
+java -jar /home/fan-nginx.jar --project.findPass=true
 ```
 
 After the operation is successful, all user names and passwords can be reset printed and two steps verify will disabled.
