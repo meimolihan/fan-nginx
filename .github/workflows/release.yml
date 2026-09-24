@@ -191,11 +191,13 @@ jobs:
             echo "CNB 仓库已存在：${CNAME}"
           else
             echo "CNB 仓库不存在：${CNAME}，自动创建 ..."
-            code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://api.cnb.cool/meimolihan/-/repos" \
+            body=$(curl -s -X POST "https://api.cnb.cool/meimolihan/-/repos" \
               -H "Authorization: Bearer ${CNB_TOKEN}" \
+              -H "accept: application/vnd.cnb.api+json" \
               -H "Content-Type: application/json" \
               -d '{"name":"'"${REPO}"'","description":"fan-nginx mirror","private":false}')
-            [ "${code}" = "200" ] || [ "${code}" = "201" ] || { echo "自动创建 CNB 仓库失败: HTTP ${code}"; exit 1; }
+            echo "CNB 创建响应: ${body}"
+            echo "${body}" | grep -qi '"repo_id"\|"id"' || { echo "自动创建 CNB 仓库失败"; exit 1; }
           fi
 
       - name: Sync to CNB Repository
