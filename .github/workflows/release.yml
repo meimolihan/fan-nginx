@@ -58,7 +58,7 @@ jobs:
           set -e
           mvn -B -DskipTests clean package
           ls -lh target/fan-nginx-*.jar
-          VER=$(ls target/fan-nginx-*.jar | grep -oE 'fan-nginx-[0-9]+\.[0-9]+\.[0-9]+' | cut -d- -f2)
+          VER=$(ls target/fan-nginx-*.jar | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
           echo "built=true" >> "$GITHUB_OUTPUT"
           echo "ver=${VER}" >> "$GITHUB_OUTPUT"
 
