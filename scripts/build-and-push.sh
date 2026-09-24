@@ -213,17 +213,32 @@ git push origin --delete "${TAG}" 2>/dev/null || true
 # ===================== 版本号 bump =====================
 info "执行版本号更新 ${TARGET_VER}"
 
-SED_I=""
-if sed --version 2>&1 | grep -q GNU; then SED_I=""; elif sed --version 2>&1 | grep -q busybox; then SED_I=""; else SED_I="''"; fi
-
 [[ ! -f "pom.xml" ]] && error "缺失文件 pom.xml"
 
-# pom.xml：<version>x.y.z</version>（artifactId 之后第一个 version 节点）
-if [[ "${SED_I}" == "''" ]]; then
-    sed -i '' -E "s|^(\s*<version>)[0-9]+\.[0-9]+\.[0-9]+(</version>)$|\1${TARGET_VER}\2|" pom.xml
-else
-    sed -i -E "s|^(\s*<version>)[0-9]+\.[0-9]+\.[0-9]+(</version>)$|\1${TARGET_VER}\2|" pom.xml
-fi
+# pom.xml：仅更新本工程版本号 <artifactId>fan-nginx</artifactId> 之后的第一个 <version>x.y.z</version>
+# （避免误改 solon-parent 与各 dependency 的版本号）
+bump_pom_version() {
+  python3 - "$1" <<'PYEOF'
+import re, sys
+target = sys.argv[1]
+lines = open('pom.xml').read().split('\n')
+out, found = [], False
+for i, line in enumerate(lines):
+    if not found and '<artifactId>' in line and 'fan-nginx' in line:
+        # 从该行往后找第一个 <version>x.y.z</version>
+        for j in range(i, i + 6):
+            m = re.fullmatch(r'(\s*)<version>[0-9]+\.[0-9]+\.[0-9]+</version>', lines[j])
+            if m:
+                lines[j] = '%s<version>%s</version>' % (m.group(1), target)
+                found = True
+                break
+    out.append(line)
+if not found:
+    raise SystemExit("未找到 fan-nginx 工程版本号")
+open('pom.xml', 'w').write('\n'.join(out))
+PYEOF
+}
+bump_pom_version "${TARGET_VER}"
 
 info "版本号确认:"
 grep -n "<version>${TARGET_VER}</version>" pom.xml | head -n3
