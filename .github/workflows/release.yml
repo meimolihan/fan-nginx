@@ -75,8 +75,6 @@ jobs:
     if: always() && needs.build-binaries.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      RELEASE_TAG: ${{ env.RELEASE_TAG }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -121,8 +119,6 @@ jobs:
     needs: publish-release
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    env:
-      RELEASE_TAG: ${{ env.RELEASE_TAG }}
     steps:
       - uses: actions/checkout@v5
         with:
